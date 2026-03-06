@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Game Portal | Repo</title>
+    <title>Jayraffe Complex | Main Page</title>
     <style>
         /* --- DESIGN SYSTEM --- */
         :root {
@@ -61,7 +61,7 @@
         }
 
         /* --- GRID LAYOUT --- */
-        .game-grid {
+        .temp-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
@@ -70,7 +70,7 @@
         }
 
         /* --- CARD STYLE --- */
-        .game-card {
+        .temp-card {
             background: var(--card-bg);
             border-radius: 16px;
             overflow: hidden;
@@ -81,7 +81,7 @@
             color: white;
         }
 
-        .game-card:hover {
+        .temp-card:hover {
             transform: translateY(-8px);
             border-color: var(--accent-cyan);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
@@ -122,13 +122,13 @@
 <body>
 
     <header>
-        <h1>TEST WEBSITE</h1>
+        <h1>JAYRAFFE COMPLEX</h1>
         <input type="text" id="searchBar" placeholder="Search for something..." onkeyup="filterGames()">
     </header>
 
-    <div class="game-grid" id="gameGrid">
+    <div class="temp-grid" id="tempGrid">
         
-        <a href="https://example.com/game1" class="game-card">
+        <a href="https://example.com/game1" class="temp-card">
             <div class="thumbnail">🎮</div>
             <div class="info">
                 <h3>Template 1</h3>
@@ -136,15 +136,15 @@
             </div>
         </a>
 
-        <a href="https://km8y68.csb.app/#gs" class="game-card">
+        <a href="https://km8y68.csb.app/#gs" class="temp-card">
             <div class="thumbnail">🚀</div>
             <div class="info">
-                <h3>Random Game Website</h3>
+                <h3>Half-Life 1 (Goldsrc Collection)</h3>
                 <span class="play-btn">Play Now</span>
             </div>
         </a>
 
-        <a href="https://polytoria.com/create" class="game-card">
+        <a href="https://polytoria.com/create" class="temp-card">
             <div class="thumbnail">🧩</div>
             <div class="info">
                 <h3>Polytoria Creator</h3>
@@ -157,7 +157,7 @@
     <script>
         function filterGames() {
             let input = document.getElementById('searchBar').value.toLowerCase();
-            let cards = document.getElementsByClassName('game-card');
+            let cards = document.getElementsByClassName('temp-card');
 
             for (let i = 0; i < cards.length; i++) {
                 let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
