@@ -119,77 +119,115 @@
 
     <script>
         // THE DATABASE (Connects to Internet Archive)
-        const gameLibrary = {
-            "hl1": {
-                title: "Half-Life",
-                creator: "Valve Software",
-                tags: "FPS / GoldSrc",
-                desc: "Run, think, shoot.. live. Play the original 1998 masterpiece directly in your browser with full multiplayer support. Though, due to piracy laws and etc.. I can't put the game data here so you can probably find it on Internet Archive or smth.",
-                banner: "assets/images/HL1Thumbnail.jpg",
-                engine: "xash3d",
-                screenshots: ["assets/images/HL1Thumbnail.jpg"],
-                config: { url: "https://x8bitrain.github.io/webXash/" }
-            },
-             "deltarune": {
-                title: "Deltarune",
-                creator: "Toby Fox",
-                tags: "Adventure/2D/Indie",
-                desc: "yes i somehow got the ENTIRE game of deltarune on here 💔",
-                banner: "assets/images/HL1Thumbnail.jpg",
-                engine: "xash3d",
-                screenshots: ["assets/images/HL1Thumbnail.jpg"],
-                config: { url: "https://jimmyqrg.github.io/loader/?content=https%3A%2F%2Fjimmyqrg.github.io%2Fjqrg-games%2Fgames%2Fdeltarune%2F" }
-            },
-            "flash_game": {
-                title: "Flash Classic",
-                creator: "Internet Archive",
-                tags: "Flash / Retro",
-                desc: "Relive the golden era of web gaming. Powered by the Ruffle emulator.",
-                banner: "https://archive.org/download/flash_art/cover.jpg",
-                engine: "ruffle",
-                screenshots: ["https://archive.org/download/flash_art/ss1.jpg"],
-                config: { url: "https://archive.org/download/your-id/game.swf" }
-            }
-        };
-
-        // UI INJECTION
-        const params = new URLSearchParams(window.location.search);
-        const gameId = params.get('game') || 'hl1'; // Default to HL1
-        const data = gameLibrary[gameId];
-
-        if (data) {
-            document.title = `Jayraffe Complex | ${data.title}`;
-            document.getElementById('game-title').innerText = data.title;
-            document.getElementById('game-creator').innerText = `SYSTEM SOURCE: ${data.creator}`;
-            document.getElementById('game-desc').innerText = data.desc;
-            document.getElementById('game-tags').innerText = data.tags;
-            document.getElementById('bg-image').style.backgroundImage = `url(${data.banner})`;
-            document.getElementById('random-screenshot').src = data.screenshots[0];
-
-            if(data.engine === 'xash3d') {
-                document.getElementById('server-preview').classList.remove('hidden');
-            }
+  <script>
+    // THE DATABASE (Fixed Syntax: No semicolons, correct braces)
+    const gameLibrary = {
+        "hl1": {
+            title: "Half-Life",
+            creator: "Valve Software",
+            tags: "FPS / GoldSrc",
+            desc: "Run, think, shoot.. live. Play the original 1998 masterpiece directly in your browser. Since I can't host the data, find it on Internet Archive!",
+            banner: "assets/images/HL1Thumbnail.jpg",
+            engine: "xash3d",
+            screenshots: ["assets/images/HL1Thumbnail.jpg"],
+            config: { url: "https://x8bitrain.github.io/webXash/" }
+        },
+        "deltarune": {
+            title: "Deltarune",
+            creator: "Toby Fox",
+            tags: "Adventure/2D/Indie",
+            desc: "yes i somehow got the ENTIRE game of deltarune on here 💔",
+            banner: "assets/images/HL1Thumbnail.jpg",
+            engine: "xash3d",
+            screenshots: ["assets/images/HL1Thumbnail.jpg"],
+            config: { url: "https://jimmyqrg.github.io/loader/?content=https%3A%2F%2Fjimmyqrg.github.io%2Fjqrg-games%2Fgames%2Fdeltarune%2F" }
+        },
+        "AceAttorney": {
+            title: "Phoenix Wright: Ace Attorney",
+            creator: "if i say i'll get cooked by their ninjas",
+            tags: "objection",
+            desc: "peaknix wright",
+            banner: "assets/images/HL1Thumbnail.jpg",
+            engine: "xash3d",
+            screenshots: ["assets/images/HL1Thumbnail.jpg"],
+            config: { url: "https://selenite.cc/loader.html?title=Ace%20Attorney%3A%20Pheonix%20Wright&dir=aceattorneyphoenixwright&img=logo.png&type=g" }
+        },
+        "Bendy": {
+            title: "Bendy and the Ink Machine",
+            creator: "TheMeatly",
+            tags: "Horror / Indie",
+            desc: "bendy was a little devil thing (we've sent you a letter to come back home...)",
+            banner: "assets/images/HL1Thumbnail.jpg",
+            engine: "xash3d",
+            screenshots: ["assets/images/HL1Thumbnail.jpg"],
+            config: { url: "https://selenite.cc/resources/semag/bendy/index.html" }
+        },
+        "Danganronpa": {
+            title: "Danganronpa: Trigger Happy Havoc",
+            creator: "Spike Chunsoft",
+            tags: "Horror / Mystery",
+            desc: "junko is so peak and btw i could fix her trust me guys 💔",
+            banner: "assets/images/HL1Thumbnail.jpg",
+            engine: "xash3d",
+            screenshots: ["assets/images/HL1Thumbnail.jpg"],
+            config: { url: "https://selenite.cc/resources/semag/danganronpa/g.html" }
+        },
+        "Ultrakill": {
+            title: "Ultrakill",
+            creator: "New Blood Interactive",
+            tags: "Combat / Action",
+            desc: "judgement (that's the only thing ik about this game except v1)",
+            banner: "assets/images/HL1Thumbnail.jpg",
+            engine: "xash3d",
+            screenshots: ["assets/images/HL1Thumbnail.jpg"],
+            config: { url: "https://selenite.cc/resources/semag/ultrakill/index.html" }
+        },
+        "flash_game": {
+            title: "Flash Classic",
+            creator: "Internet Archive",
+            tags: "Flash / Retro",
+            desc: "Relive the golden era of web gaming. Powered by the Ruffle emulator.",
+            banner: "https://archive.org/download/flash_art/cover.jpg",
+            engine: "ruffle",
+            screenshots: ["https://archive.org/download/flash_art/ss1.jpg"],
+            config: { url: "https://archive.org/download/your-id/game.swf" }
         }
+    };
 
-        // ENGINE LOADER
-document.getElementById('start-btn').addEventListener('click', function() {
-    const container = document.getElementById('game-container');
-    
-    // 1. Construct the URL with the Internet Archive ZIP
-    const webXashUrl = `https://x8bitrain.github.io/webXash/?archive=${encodeURIComponent(data.config.url)}`;
+    // UI INJECTION
+    const params = new URLSearchParams(window.location.search);
+    const gameId = params.get('game') || 'hl1'; 
+    const data = gameLibrary[gameId];
 
-    // 2. Create the Iframe element
-    const gameFrame = document.createElement('iframe');
-    
-    // 3. Set Attributes for the best experience
-    gameFrame.src = webXashUrl;
-    gameFrame.className = "w-full h-full border-0"; // Fills the black frame
-    gameFrame.allow = "autoplay; fullscreen; keyboard; gamepad"; // Critical for games
-    
-    // 4. Inject it!
-    container.innerHTML = ''; // Removes the button and loading UI
-    container.appendChild(gameFrame);
-});
-    </script>
+    if (data) {
+        document.title = `Jayraffe Complex | ${data.title}`;
+        document.getElementById('game-title').innerText = data.title;
+        document.getElementById('game-creator').innerText = `SYSTEM SOURCE: ${data.creator}`;
+        document.getElementById('game-desc').innerText = data.desc;
+        document.getElementById('game-tags').innerText = data.tags;
+        document.getElementById('bg-image').style.backgroundImage = `url(${data.banner})`;
+        document.getElementById('random-screenshot').src = data.screenshots[0];
+
+        if(data.engine === 'xash3d') {
+            document.getElementById('server-preview').classList.remove('hidden');
+        }
+    }
+
+    // ENGINE LOADER
+    document.getElementById('start-btn').addEventListener('click', function() {
+        const container = document.getElementById('game-container');
+        
+        // Use the config.url directly from the library
+        const webXashUrl = data.config.url;
+
+        const gameFrame = document.createElement('iframe');
+        gameFrame.src = webXashUrl;
+        gameFrame.className = "w-full h-full border-0";
+        gameFrame.allow = "autoplay; fullscreen; keyboard; gamepad; pointer-lock";
+        
+        container.innerHTML = ''; 
+        container.appendChild(gameFrame);
+    });
+</script>
 </body>
 </html>
