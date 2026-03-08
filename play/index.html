@@ -239,11 +239,10 @@ async function toggleFavorite() {
 // Change this function to check for the client first
 async function syncFavoriteStatus() {
     const client = window.supabaseClient;
-    
-    // If global.js isn't ready yet, don't crash
+
+    // The Guard: If client isn't ready, stop here so it doesn't crash
     if (!client) {
-        console.warn("Supabase not ready, retrying sync...");
-        setTimeout(syncFavoriteStatus, 500); 
+        console.error("Supabase client is not initialized.");
         return;
     }
 
