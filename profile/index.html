@@ -65,6 +65,12 @@
     <script>
         // Specific logic for the profile page
         async function loadProfile() {
+        const client = window.supabaseClient;
+        if (!client) {
+            setTimeout(loadProfile, 100);
+            return;
+        }
+
             const { data: { user } } = await supabase.auth.getUser();
 
             if (!user) {
@@ -73,16 +79,38 @@
                 return;
             }
 
+            const { data: profile } = await client.from('profiles').select('favorites').eq('id', user.id).single();
+    const favIds = profile?.favorites || [];
+    const grid = document.getElementById('favorites-grid'); // Make sure you have this ID in your HTML
+    
+    grid.innerHTML = ''; // Clear "Loading..." text
+
+    // 2. Map those IDs to your Activity Library
+    favIds.forEach(id => {
+        const game = window.activityLibrary[id];
+        if (game) {
+            const card = document.createElement('div');
+            card.className = "glass-panel p-4 rounded-xl border border-white/10 hover:border-cyan-500/50 transition group";
+            card.innerHTML = `
+                <img src="../${game.banner}" class="w-full h-32 object-cover rounded-lg mb-4">
+                <h3 class="font-bold uppercase tracking-tighter">${game.title}</h3>
+                <p class="text-xs text-slate-500 mb-4">${game.tags}</p>
+                <a href="../play/?id=${id}" class="block text-center py-2 bg-slate-800 hover:bg-cyan-600 rounded-lg text-xs font-bold transition">LAUNCH</a>
+            `;
+            grid.appendChild(card);
+        }
+    });
+}
+
             document.getElementById('profile-name').innerText = user.user_metadata.display_name || "just monika or smth";
             document.getElementById('profile-email').innerText = user.email;
 
             if (user.user_metadata.avatar_url) {
                 document.getElementById('profile-avatar').innerHTML = `<img src="${user.user_metadata.avatar_url}" class="w-full h-full object-cover">`;
             }
-        }
 
         // Wait for global.js to finish loading the session
-        document.addEventListener('DOMContentLoaded', loadProfile);
+        document.addEventListener('load', loadProfile);
     </script>
 </body>
 </html>
