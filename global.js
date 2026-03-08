@@ -1,6 +1,6 @@
 // global.js - The central brain
-const SUPABASE_URL = 'https://your-project-url.supabase.co';
-const SUPABASE_KEY = 'your-anon-public-key';
+const SUPABASE_URL = 'https://edmakmpjcudrwdxpgbuc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkbWFrbXBqY3VkcndkeHBnYnVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5NTAzNDMsImV4cCI6MjA4ODUyNjM0M30.efTUVrvQbKYBlDBv2B-SCXaKQYCRU84gJ9jP8CMwyUs';
 
 // This is the ONLY place 'supabase' is declared
 window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
