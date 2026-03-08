@@ -138,10 +138,9 @@ async function checkAuthStatus() {
 }
 
 async function handleSignOut() {
-    // Use the client here too!
     if (window.supabaseClient) {
         await window.supabaseClient.auth.signOut();
-        window.location.href = "../"; 
+        window.location.href = "../"; // This takes you back to home
     }
 }
 
