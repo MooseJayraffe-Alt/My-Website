@@ -99,24 +99,30 @@ window.activityLibrary = {
 window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function checkAuthStatus() {
+    // 1. Get the client from the window
+    const client = window.supabaseClient;
 
-    if (!window.supabaseClient) return;
+    // 2. If it's not ready, wait and try again (The "Patient" Loop)
+    if (!client) {
+        setTimeout(checkAuthStatus, 100);
+        return;
+    }
     
-    const { data: { user } } = await supabase.auth.getUser();
+    // 3. Use 'client' instead of 'supabase'
+    const { data: { user } } = await client.auth.getUser();
 
     if (user) {
-        // Find navbar elements
         const statusBtn = document.getElementById('user-status');
         const nameEl = document.getElementById('user-name');
         const rankEl = document.getElementById('user-rank');
         const avatarEl = document.getElementById('user-avatar');
 
-        // Update Nav
-        if (statusBtn) statusBtn.href = "profile/";
+        // Smart Pathing: Check if we are in a subfolder
+        const isSub = window.location.pathname.includes('/play/') || window.location.pathname.includes('/profile/');
+        if (statusBtn) statusBtn.href = isSub ? "../profile/" : "profile/";
+
         if (nameEl) {
-            nameEl.innerText = user.user_metadata.full_name || 
-                               user.user_metadata.display_name || 
-                               user.email.split('@')[0];
+            nameEl.innerText = user.user_metadata.display_name || user.email.split('@')[0];
         }
         if (rankEl) rankEl.innerText = "Complex Citizen";
         
@@ -132,9 +138,12 @@ async function checkAuthStatus() {
 }
 
 async function handleSignOut() {
-    await supabase.auth.signOut();
-    window.location.href = "./";
+    // Use the client here too!
+    if (window.supabaseClient) {
+        await window.supabaseClient.auth.signOut();
+        window.location.href = "../"; 
+    }
 }
 
 // Check status whenever a page finishes loading
-document.addEventListener('DOMContentLoaded', checkAuthStatus);
+document.addEventListener('load', checkAuthStatus);
