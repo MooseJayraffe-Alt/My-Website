@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="global.js"></script>
+    <script src="../global.js"></script>
     <!-- js-dos style sheet -->
     <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
     <!-- js-dos -->
@@ -116,7 +116,12 @@
                 </div>
                 
                 <div class="flex gap-4">
-                    <button class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-sm border border-white/5 transition">FAVORITE</button>
+                    <button id="fav-btn" onclick="toggleFavorite()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-sm border border-white/5 transition flex items-center justify-center gap-2 group">
+                    <svg id="fav-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-none stroke-slate-400 group-hover:stroke-pink-500 transition-all" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span id="fav-text">FAVORITE</span>
+                    </button>
                     <button class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-sm border border-white/5 transition">SHARE</button>
                 </div>
             </div>
@@ -125,124 +130,43 @@
     </main>
 
     <script>
-
-    const SUPABASE_URL = 'https://edmakmpjcudrwdxpgbuc.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkbWFrbXBqY3VkcndkeHBnYnVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5NTAzNDMsImV4cCI6MjA4ODUyNjM0M30.efTUVrvQbKYBlDBv2B-SCXaKQYCRU84gJ9jP8CMwyUs';
-
     // State management
     let currentUser = null;
-        // THE DATABASE (Connects to Internet Archive)
-    const activityLibrary = {
-        "hl1": {
-            title: "Half-Life",
-            creator: "Valve Software",
-            tags: "FPS / GoldSrc",
-            desc: "Run, think, shoot.. live. Play the original 1998 masterpiece directly in your browser. Since I can't host the data, find it on Internet Archive!",
-            banner: "assets/images/HL1Thumbnail.jpg",
-            engine: "xash3d",
-            screenshots: ["assets/images/HL1Thumbnail.jpg"],
-            config: { url: "https://x8bitrain.github.io/webXash/" }
-        },
-        "deltarune": {
-            title: "Deltarune",
-            creator: "Toby Fox",
-            tags: "Adventure/2D/Indie",
-            desc: "yes i somehow got the ENTIRE activity of deltarune on here 💔",
-            banner: "assets/images/DeltaruneThumbnail.webp",
-            engine: "HTML5",
-            screenshots: ["assets/images/DeltaruneThumbnail.webp"],
-            config: { url: "https://jimmyqrg.github.io/loader/?content=https%3A%2F%2Fjimmyqrg.github.io%2Fjqrg-activitys%2Factivitys%2Fdeltarune%2F" }
-        },
-        "AceAttorney": {
-            title: "Phoenix Wright: Ace Attorney",
-            creator: "if i say i'll get cooked by their ninjas",
-            tags: "objection",
-            desc: "peaknix wright",
-            banner: "assets/images/HoldIt.jpg",
-            engine: "HTML5",
-            screenshots: ["assets/images/HoldIt.jpg"],
-            config: { url: "https://selenite.cc/loader.html?title=Ace%20Attorney%3A%20Pheonix%20Wright&dir=aceattorneyphoenixwright&img=logo.png&type=g" }
-        },
-        "bendy": {
-            title: "Bendy and the Ink Machine",
-            creator: "TheMeatly",
-            tags: "Horror / Indie",
-            desc: "bendy was a little devil thing (Hey, I am alive! Immortalized, You're the creator! You traitor!)",
-            banner: "assets/images/BendyThumbnail.jpg",
-            engine: "HTML5",
-            screenshots: ["assets/images/BendyThumbnail.jpg"],
-            config: { url: "https://selenite.cc/resources/semag/bendy/index.html" }
-        },
-        "doom": {
-            title: "Doom",
-            creator: "ID Software",
-            tags: "Horror / Action / Shooter",
-            desc: "In a port of the original 1993 classic, enjoy hacking and slashing your way through levels and become what the demons will call 'DOOM'. ",
-            banner: "assets/images/DoomThumbnail.webp",
-            engine: "JS-DOS",
-            screenshots: ["assets/images/DoomThumbnail.webp"],
-            config: { url: "https://v8.js-dos.com/bundles/doom.jsdos" }
-        },
-        "danganronpa": {
-            title: "Danganronpa: Trigger Happy Havoc",
-            creator: "Spike Chunsoft",
-            tags: "Horror / Mystery",
-            desc: "junko is so peak and btw i could fix her trust me guys 💔",
-            banner: "assets/images/DanganronpaThumbnail.webp",
-            engine: "HTML5",
-            screenshots: ["assets/images/DanganronpaThumbnail.webp"],
-            config: { url: "https://selenite.cc/resources/semag/danganronpa/g.html" }
-        },
-        "ultrakill": {
-            title: "Ultrakill",
-            creator: "New Blood Interactive",
-            tags: "Combat / Action",
-            desc: "judgement (that's the only thing ik about this activity except v1)",
-            banner: "assets/images/UltrakillThumbnail.jpg",
-            engine: "HTML5",
-            screenshots: ["assets/images/UltrakillThumbnail.jpg"],
-            config: { url: "https://selenite.cc/resources/semag/ultrakill/index.html" }
-        },
-        "hk": {
-            title: "Hollow Knight",
-            creator: "Unknown",
-            tags: "2D Side-Scroller / Action",
-            desc: "shaw (that's the only thing ik about this activity 😭)",
-            banner: "assets/images/HollowKnightThumbnail.png",
-            engine: "HTML5",
-            screenshots: ["assets/images/HollowKnightThumbnail.png"],
-            config: { url: "https://moosejayraffe-alt.github.io/hollow-knight/" }
-        },
-        "etc": {
-            title: "Escaping the Complex",
-            creator: "Puffballs United",
-            tags: "Flash / THIS IS THE GREATEST PLANNNN",
-            desc: "Relive the absolute peak that is Henry Stickmin. Powered by the Ruffle emulator.",
-            banner: "assets/images/HenryStickminETCThumbnail.avif",
-            engine: "Flash",
-            screenshots: ["assets/images/HenryStickminETCThumbnail.avif"],
-            config: { filename: "fleeingthecomplexng" }
-        }
-    };
+    let data = null; // Move data to the outer scope
 
+    const params = new URLSearchParams(window.location.search);
+    const activityId = params.get('id') || 'hl1';
+    
     // UI INJECTION
-const params = new URLSearchParams(window.location.search);
-const activityId = params.get('id') || 'hl1';
-const data = activityLibrary[activityId];
 
-if (data) {
-    document.title = `Jayraffe Complex | ${data.title}`;
-    document.getElementById('activity-title').innerText = data.title;
-    document.getElementById('activity-creator').innerText = `Creator: ${data.creator}`;
-    document.getElementById('activity-desc').innerText = data.desc;
-    document.getElementById('activity-tags').innerText = data.tags;
-    document.getElementById('bg-image').style.backgroundImage = `url(${data.banner})`;
-    document.getElementById('random-screenshot').src = data.screenshots[0];
 
-    if (data.engine === 'xash3d') {
-        document.getElementById('server-preview').classList.remove('hidden');
+function initPage() {
+    // Access the library from the window object
+    const library = window.activityLibrary;
+    
+    if (!library) {
+        console.error("Library not found yet. Retrying...");
+        return;
+    }
+
+    data = library[activityId];
+
+    if (data) {
+        document.title = `Jayraffe Complex | ${data.title}`;
+        document.getElementById('activity-title').innerText = data.title;
+        document.getElementById('activity-creator').innerText = `Creator: ${data.creator}`;
+        document.getElementById('activity-desc').innerText = data.desc;
+        document.getElementById('activity-tags').innerText = data.tags;
+        // Added ../ to paths since we are in a subfolder
+        document.getElementById('bg-image').style.backgroundImage = `url(../${data.banner})`;
+        document.getElementById('random-screenshot').src = `../${data.screenshots[0]}`;
+
+        if (data.engine === 'xash3d') {
+            document.getElementById('server-preview').classList.remove('hidden');
+        }
     }
 }
+
 
 // ENGINE LOADER
 document.getElementById('start-btn').addEventListener('click', function () {
@@ -274,6 +198,62 @@ document.getElementById('start-btn').addEventListener('click', function () {
         activityFrame.allow = "autoplay; fullscreen; keyboard; activitypad; pointer-lock";
         container.appendChild(activityFrame);
     }
+});
+
+async function toggleFavorite() {
+    const client = window.supabaseClient;
+    const { data: { user } } = await client.auth.getUser();
+
+    if (!user) {
+        alert("Please sign in to save favorites!");
+        return;
+    }
+
+    const icon = document.getElementById('fav-icon');
+    const text = document.getElementById('fav-text');
+    
+    // 1. Fetch current favorites
+    let { data: profile } = await client.from('profiles').select('favorites').eq('id', user.id).single();
+    let favs = profile?.favorites || [];
+    
+    // Check if current activityId is in the list
+    const isFav = favs.includes(activityId);
+
+    if (isFav) {
+        favs = favs.filter(id => id !== activityId); // Remove
+        icon.classList.replace('fill-pink-500', 'fill-none');
+        icon.classList.replace('stroke-pink-500', 'stroke-slate-400');
+        text.innerText = "FAVORITE";
+    } else {
+        favs.push(activityId); // Add
+        icon.classList.replace('fill-none', 'fill-pink-500');
+        icon.classList.replace('stroke-slate-400', 'stroke-pink-500');
+        text.innerText = "FAVORITED";
+    }
+
+    // 2. Update Supabase
+    await client.from('profiles').update({ favorites: favs }).eq('id', user.id);
+}
+
+// Check if already favorited on page load
+async function syncFavoriteStatus() {
+    const client = window.supabaseClient;
+    const { data: { user } } = await client.auth.getUser();
+    if (!user) return;
+
+    let { data: profile } = await client.from('profiles').select('favorites').eq('id', user.id).single();
+    if (profile?.favorites?.includes(activityId)) {
+        document.getElementById('fav-icon').classList.replace('fill-none', 'fill-pink-500');
+        document.getElementById('fav-icon').classList.replace('stroke-slate-400', 'stroke-pink-500');
+        document.getElementById('fav-text').innerText = "FAVORITED";
+    }
+}
+
+// Run the sync check
+// THE FIX: Wait for the entire window (including global.js) to load
+window.addEventListener('load', () => {
+    initPage();
+    syncFavoriteStatus();
 });
 </script>
 </body>
