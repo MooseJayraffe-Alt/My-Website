@@ -18,9 +18,9 @@
         :root {
             --bg-dark: #0f172a;
             --card-bg: #1e293b;
-            --accent-cyan: #22d3ee;
-            --accent-purple: #a855f7;
-            --gradient: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+            --accent-cyan: #ff7300;
+            --accent-purple: #9a0000;
+            --gradient: linear-gradient(135deg, #ff7700 0%, #920e05 100%);
         }
 
         body { background-color: var(--bg-dark); font-family: 'Inter', sans-serif; }
@@ -201,7 +201,7 @@ document.getElementById('start-btn').addEventListener('click', function () {
 });
 
 async function toggleFavorite() {
-    const client = window.supabase;
+    const client = window.supabaseClient;
     const { data: { user } } = await client.auth.getUser();
 
     if (!user) {
