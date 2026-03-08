@@ -185,9 +185,17 @@ document.getElementById('start-btn').addEventListener('click', function () {
 
     } else if (data.engine === "JS-DOS") {
     
-    Dos(document.getElementById("dos"), {
-        url: data.config.url,
-    });    
+   const loadingUI = document.getElementById('loading-ui');
+    
+    // Safety check: Only hide if it actually exists
+    if (loadingUI) {
+        loadingUI.classList.add('hidden');
+    }
+
+    // Clear container and setup DOS
+    container.innerHTML = '<div id="dos" class="w-full h-full"></div>';
+    
+    Dos(document.getElementById("dos")).run(data.config.url);
         
         
     } else {
