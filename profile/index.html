@@ -28,6 +28,18 @@
         <h1 id="profile-name" class="text-4xl font-black uppercase italic tracking-tighter mb-2">Loading...</h1>
         <p id="profile-email" class="text-slate-500 font-mono text-sm mb-8 tracking-widest uppercase">Unauthorized</p>
 
+        <div class="w-full max-w-md mx-auto mb-8 p-4 bg-slate-900/50 rounded-2xl border border-white/5 group relative">
+        <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.2em] mb-2">Citizen Status / Bio</p>
+    
+        <p id="display-bio" class="text-slate-300 italic text-sm leading-relaxed">
+            "Fetching status from the archives..."
+        </p>
+
+        <button onclick="updateBio()" class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all text-[10px] bg-white/10 hover:bg-cyan-500 px-2 py-1 rounded font-bold">
+            EDIT
+        </button>
+    </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-10">
             <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
                 <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Rank</p>
@@ -86,6 +98,8 @@ async function loadProfile() {
     // --- EVERYTHING BELOW THIS IS NOW INSIDE THE USER CHECK ---
 
     // 3. Update Profile UI (Name and Email)
+    // Add this to your loadProfile function
+    document.getElementById('display-bio').innerText = profileData?.bio || "No bio set.";
     document.getElementById('profile-name').innerText = user.user_metadata.display_name || "New Citizen";
     document.getElementById('profile-email').innerText = user.email;
 
@@ -94,10 +108,19 @@ async function loadProfile() {
     }
 
     // 4. Load Favorites from Database
-    const { data: profile } = await client.from('profiles')
-        .select('favorites')
-        .eq('id', user.id)
-        .single();
+    const { data: profile, error } = await client
+    .from('profiles')
+    .select('favorites, bio') 
+    .eq('id', user.id)
+    .single();
+
+// 1. Handle the Bio
+const bioElement = document.getElementById('display-bio');
+if (profile && profile.bio) {
+    bioElement.innerText = `"${profile.bio}"`;
+} else {
+    bioElement.innerText = "No status set. Click edit to update.";
+}
 
     const favIds = profile?.favorites || [];
     const grid = document.getElementById('favorites-grid');
@@ -133,6 +156,27 @@ async function loadProfile() {
     }
 }
 
+async function updateBio() {
+    const currentBio = document.getElementById('display-bio').innerText.replace(/"/g, "");
+    const newBio = prompt("Update your Citizen Status:", currentBio);
+
+    // If they didn't hit cancel and the bio isn't empty
+    if (newBio !== null) {
+        const client = window.supabaseClient;
+        const { data: { user } } = await client.auth.getUser();
+
+        const { error } = await client
+            .from('profiles')
+            .update({ bio: newBio })
+            .eq('id', user.id);
+
+        if (error) {
+            alert("Archive Update Failed: " + error.message);
+        } else {
+            document.getElementById('display-bio').innerText = `"${newBio}"`;
+        }
+    }
+}
 // CRITICAL: Initialize on window load
 window.addEventListener('load', loadProfile);
     </script>
