@@ -41,25 +41,32 @@
     </main>
 
     <script>
-        const MASTER_SERVER_URL = "https://master.xash.su/api/servers"; // Official Xash3D API
+
+// We wrap the URL in a public proxy
+const PROXY_URL = "https://api.allorigins.win/raw?url=";
+const MASTER_SERVER_URL = "https://master.xash.su/api/servers";
 
 async function refreshServers() {
     const list = document.getElementById('server-list');
-    list.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-cyan-500 animate-pulse font-mono">SCANNING NETWORK NODES...</td></tr>';
+    list.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-cyan-500 animate-pulse font-mono">BYPASSING SECURITY & SCANNING...</td></tr>';
 
     try {
-        const response = await fetch(MASTER_SERVER_URL);
+        // We fetch through the proxy instead of directly
+        const response = await fetch(PROXY_URL + encodeURIComponent(MASTER_SERVER_URL));
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const data = await response.json();
 
-        // Xash API returns an array of server objects
-        // We sort them by player count so the "active" ones are at the top
+        // The Xash API returns { "servers": [...] }
         const activeServers = data.servers
             .filter(s => s.players > 0) 
             .sort((a, b) => b.players - a.players);
 
         renderServers(activeServers);
     } catch (error) {
-        list.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500 font-mono">UPLINK FAILED: MASTER SERVER OFFLINE</td></tr>';
+        console.error("Fetch Error:", error);
+        list.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500 font-mono">UPLINK FAILED: ${error.message}</td></tr>`;
     }
 }
 
