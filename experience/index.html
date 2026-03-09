@@ -167,11 +167,33 @@ function initPage() {
     }
 }
 
+async function updatePresence(gameTitle) {
+    const { data: { user } } = await window.supabaseClient.auth.getUser();
+    if (!user) return;
+
+    const { error } = await window.supabaseClient
+        .from('presence')
+        .upsert({ 
+            user_id: user.id, 
+            last_seen: new Date().toISOString(),
+            current_activity: gameTitle 
+        });
+}
+
+
+
 
 // ENGINE LOADER
 document.getElementById('start-btn').addEventListener('click', function () {
     const container = document.getElementById('activity-container');
     container.innerHTML = ''; // Clear the loading UI
+
+    // Start the heartbeat when the game loads
+// And repeat it every 30 seconds
+setInterval(() => {
+    const gameName = new URLSearchParams(window.location.search).get('game');
+    updatePresence(gameName);
+}, 30000);
 
     if (data.engine === 'Flash') {
         // Create Ruffle Player

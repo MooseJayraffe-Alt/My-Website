@@ -6,6 +6,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="global.js"></script>
     <title>Jayraffe Complex | Main Page</title>
+
+    <div class="glass-panel p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 inline-flex items-center gap-4">
+    <div class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+    </div>
+    <div>
+        <span id="live-counter" class="text-xl font-black text-white italic tracking-tighter">00</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 ml-2">Citizens Active</span>
+    </div>
+</div>
     <style>
         /* --- DESIGN SYSTEM --- */
         :root {
@@ -259,6 +270,36 @@
             </div>
         </a>
 
+       <a href="https://archive.org/details/team-fortress-2-v.-1729296.7z" class="temp-card">
+            <div class="thumbnail">
+                <img alt = "we're doomed.." src= "assets/images/tf2.jpg">
+            </div>
+            <div class="info">
+                <h3>TF2</h3>
+                <span class="play-btn">Play Now</span>
+            </div>
+        </a>
+
+        <a href="https://archive.org/details/garrys-mod-10-nosteam_202501" class="temp-card">
+            <div class="thumbnail">
+                <img alt = "we're doomed.." src= "assets/images/GMOD.jpg">
+            </div>
+            <div class="info">
+                <h3>GMoD</h3>
+                <span class="play-btn">Play Now</span>
+            </div>
+        </a>
+
+        
+
+        <a href="https://polytoria.com/create" class="temp-card">
+            <div class="thumbnail">🧩</div>
+            <div class="info">
+                <h3>Polytoria Creator</h3>
+                <span class="play-btn">Create Now</span>
+            </div>
+        </a>
+
         <a href="https://polytoria.com/create" class="temp-card">
             <div class="thumbnail">🧩</div>
             <div class="info">
@@ -283,6 +324,24 @@
                 }
             }
         }
+
+        async function getActiveCount() {
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60000).toISOString();
+
+    const { count, error } = await window.supabaseClient
+        .from('presence')
+        .select('*', { count: 'exact', head: true })
+        .gt('last_seen', fiveMinutesAgo);
+
+    if (!error) {
+        // Pad with a zero (e.g., "05" instead of "5") for that retro look
+        document.getElementById('live-counter').innerText = count.toString().padStart(2, '0');
+    }
+}
+
+// Refresh the counter every minute
+setInterval(getActiveCount, 60000);
+getActiveCount(); // Run once on load
     </script>
 
 </body>
