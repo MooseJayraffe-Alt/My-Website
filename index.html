@@ -184,6 +184,12 @@
             </div>
     </section>
 
+    <section id="active-citizens" class="w-full max-w-5xl mb-12">
+    <h3 class="text-[10px] font-bold uppercase tracking-[0.4em] text-emerald-500 mb-4">Current Sector Occupants</h3>
+    <div id="citizen-list" class="flex flex-wrap gap-3">
+        </div>
+    </section>
+
     <div class="temp-grid" id="tempGrid">
 
         <a href="https://archive.org/download/mjayraffecomplexdirect/Half-Life.7z" class="temp-card">
@@ -412,6 +418,40 @@ updateTrendingGames();
     }
 }
 
+async function updateCitizenList() {
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60000).toISOString();
+    const list = document.getElementById('citizen-list');
+
+    // Fetch active presence and join with profile data
+    const { data, error } = await window.supabaseClient
+        .from('presence')
+        .select(`
+            user_id,
+            current_activity,
+            profiles ( display_name, avatar_url )
+        `)
+        .gt('last_seen', fiveMinutesAgo);
+
+    if (error || !data) return;
+
+    list.innerHTML = data.map(session => `
+        <a href="profile/?id=${session.user_id}" class="group relative flex items-center gap-3 bg-slate-900/40 p-2 pr-4 rounded-full border border-white/5 hover:border-emerald-500/50 transition">
+            <div class="w-8 h-8 rounded-full bg-slate-800 border border-white/10 overflow-hidden">
+                <img src="${session.profiles?.avatar_url || '../assets/default-avatar.png'}" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <p class="text-xs font-bold text-white leading-none">${session.profiles?.display_name || 'Unknown'}</p>
+                <p class="text-[8px] text-emerald-500 uppercase tracking-tighter">Playing: ${session.current_activity || 'Browsing'}</p>
+            </div>
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition">
+                VIEW DOSSIER
+            </div>
+        </a>
+    `).join('');
+}
+
+
+
 async function checkUserSession() {
     const { data: { user } } = await window.supabaseClient.auth.getUser();
 
@@ -448,14 +488,16 @@ async function initializeHome() {
     await checkUserSession();
     await getActiveCount();
     await updateTrendingGames();
+    await updateCitizenList();
 }
 
 // Event Listeners
 window.addEventListener('load', initializeHome);
 
 // Timers to keep data fresh
+setInterval(updateCitizenList, 30000);
 setInterval(getActiveCount, 60000);    // Refresh total count every minute
-setInterval(updateTrendingGames, 2000); // Refresh trending list every 30s
+setInterval(updateTrendingGames, 30000); // Refresh trending list every 30s
     </script>
 
 </body>
