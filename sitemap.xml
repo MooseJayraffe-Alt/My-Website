@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<!--  created with sitemap generator https://octopus.do  -->
+
+    <url>
+        <loc>https://moosejayraffe-alt.github.io/jayraffecomplex/</loc>
+        <lastmod>2026-03-13</lastmod>
+        <changefreq>always</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://moosejayraffe-alt.github.io/jayraffecomplex//jayraffecomplex</loc>
+        <lastmod>2026-03-13</lastmod>
+        <changefreq>always</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://moosejayraffe-alt.github.io/jayraffecomplex//jayraffecomplex/auth</loc>
+        <lastmod>2026-03-13</lastmod>
+        <changefreq>always</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://moosejayraffe-alt.github.io/jayraffecomplex//jayraffecomplex/experience</loc>
+        <lastmod>2026-03-13</lastmod>
+        <changefreq>always</changefreq>
+        <priority>0.5</priority>
+    </url>
+</urlset>
