@@ -169,7 +169,7 @@ async function updateNavIdentity() {
 // --- GLOBAL UI SOUND SYSTEM ---
 
 // Create the audio object (replace with your actual sound file path)
-const uiClickSound1 = new Audio('..assets/audio/buttonclickrelease.wav');
+const uiClickSound1 = new Audio('assets/audio/buttonclickrelease.wav');
 uiClickSound1.volume = 0.35; // Adjust volume so it's not too startling
 
 function playClick() {
