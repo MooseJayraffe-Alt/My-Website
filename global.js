@@ -120,8 +120,8 @@ async function checkAuthStatus() {
         const avatarEl = document.getElementById('user-avatar');
 
         // Smart Pathing: Check if we are in a subfolder
-        const isSub = window.location.pathname.includes('/experience/') || window.location.pathname.includes('/profile/');
-        if (statusBtn) statusBtn.href = isSub ? "../profile/" : "profile/";
+        const isSub = window.location.pathname.includes('experience/') || window.location.pathname.includes('profile/');
+        if (statusBtn) statusBtn.href = isSub ? "..profile/" : "profile/";
 
         if (nameEl) {
             nameEl.innerText = user.user_metadata.display_name || user.email.split('@')[0];
@@ -142,7 +142,7 @@ async function checkAuthStatus() {
 async function handleSignOut() {
     if (window.supabaseClient) {
         await window.supabaseClient.auth.signOut();
-        window.location.href = "../homepage"; // This takes you back to home
+        window.location.href = "..homepage/"; // This takes you back to home
     }
 }
 
@@ -169,7 +169,7 @@ async function updateNavIdentity() {
 // --- GLOBAL UI SOUND SYSTEM ---
 
 // Create the audio object (replace with your actual sound file path)
-const uiClickSound1 = new Audio('../assets/audio/buttonclickrelease.wav');
+const uiClickSound1 = new Audio('..assets/audio/buttonclickrelease.wav');
 uiClickSound1.volume = 0.35; // Adjust volume so it's not too startling
 
 function playClick() {
